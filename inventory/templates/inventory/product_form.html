@@ -1,0 +1,13 @@
+
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save</button>
+</form>
+{% if confirm_delete %}
+  <form method="post">{% csrf_token %}<button type="submit">Confirm Delete</button></form>
+{% endif %}
+{% endblock %}

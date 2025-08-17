@@ -1,0 +1,19 @@
+
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login — Shop Manager</title>
+  <link rel="stylesheet" href="{% static 'inventory/css/style.css' %}">
+</head>
+<body style="display:flex;align-items:center;justify-content:center;height:100vh;background:#282216;color:#CECBCB">
+  <form method="post" class="card" style="min-width:300px;max-width:360px">
+    <h2 style="margin-top:0">Sign in</h2>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button" style="width:100%">Login</button>
+  </form>
+</body>
+</html>

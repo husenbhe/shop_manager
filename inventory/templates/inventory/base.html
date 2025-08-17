@@ -1,0 +1,44 @@
+
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title %}Shop Manager{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/style.css' %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#7F0951">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">BURHANI SHOP MANAGER</div>
+      <nav>
+        <a href="{% url 'inventory:dashboard' %}">Dashboard</a>
+        <a href="{% url 'inventory:product_list' %}">Products</a>
+        <a href="{% url 'inventory:sale_add' %}">Add Sale</a>
+        <a href="/admin/">Django Admin</a>
+        <a href="/accounts/logout/">Logout</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      {% if messages %}
+        <ul class="messages">{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">&copy; <script>document.write(new Date().getFullYear())</script> BURHANI</footer>
+
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register("{% static 'sw.js' %}")
+          .then(() => console.log('Service Worker registered'))
+          .catch(e => console.log('SW registration failed:', e));
+      });
+    }
+    </script>
+  </body>
+</html>

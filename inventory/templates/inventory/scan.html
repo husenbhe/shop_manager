@@ -1,0 +1,41 @@
+
+{% extends 'inventory/base.html' %}
+{% block title %}Scan Barcode{% endblock %}
+{% block content %}
+<h1>Scan Barcode</h1>
+<button id="startScan" class="button">Start Scan</button>
+<video id="preview" style="display:none;width:100%;max-width:480px;margin-top:12px;border-radius:12px"></video>
+<p id="result" style="margin-top:12px"></p>
+
+<script src="https://unpkg.com/@zxing/browser@latest"></script>
+<script>
+const reader = new ZXing.BrowserMultiFormatReader();
+const preview = document.getElementById('preview');
+document.getElementById('startScan').addEventListener('click', async () => {
+  try {
+    preview.style.display = 'block';
+    const result = await reader.decodeOnceFromVideoDevice(undefined, 'preview');
+    const code = result.text;
+    document.getElementById('result').innerText = 'Scanned: ' + code;
+    // Try lookup via API
+    const token = sessionStorage.getItem('jwt_access'); // if you store token; else rely on session
+    const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+    fetch('/api/products/lookup/?barcode=' + encodeURIComponent(code), { headers })
+      .then(r => r.json())
+      .then(data => {
+        if (data && data.name) {
+          document.getElementById('result').innerText += '\nProduct: ' + data.name + ' | Price: ' + data.selling_price;
+        } else {
+          document.getElementById('result').innerText += '\nNo product found';
+        }
+      }).catch(() => {});
+  } catch(e) {
+    console.error(e);
+    alert('Scan failed: ' + e);
+  } finally {
+    reader.reset();
+    preview.style.display = 'none';
+  }
+});
+</script>
+{% endblock %}
